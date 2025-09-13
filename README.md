@@ -23,8 +23,7 @@ Este proyecto fue creado con fines educativos y de práctica, usando archivos `.
 ```bash
 src/main/java/com/example/paymentsimulator/
 ├─ PaymentSimulator.java # Main con demo de flujo
-├─ application/ # Orquestador del caso de uso
-│ └─ GeneratePaymentOrderService.java
+├─ GeneratePaymentOrderService.java # Orquestador del caso de uso
 ├─ domain/ # Entidades y VOs
 │ ├─ Bank.java
 │ ├─ Card.java
