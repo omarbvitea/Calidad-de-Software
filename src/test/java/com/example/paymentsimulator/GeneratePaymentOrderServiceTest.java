@@ -34,7 +34,10 @@ public class GeneratePaymentOrderServiceTest {
   }
 
   @Test
-  void generate_happyPath() {
+  void generate_FlujoExitoso() {  
+    //Valida que el servicio crea una orden válida de principio a fin, 
+    //coordinando con los colaboradores y dando un resultado esperado al usuario.
+     
     ImageValidator imageValidator = mock(ImageValidator.class);
     AmountValidator amountValidator = mock(AmountValidator.class);
     CardValidator cardValidator = mock(CardValidator.class);
@@ -90,6 +93,9 @@ public class GeneratePaymentOrderServiceTest {
 
   @Test
   void generate_cortaAnteImagenInvalida() {
+    //Comprueba que, si el comprobante de pago no es válido, el proceso se detiene al inicio y
+    //no sigue con pasos innecesarios.
+    
     ImageValidator imageValidator = mock(ImageValidator.class);
     AmountValidator amountValidator = mock(AmountValidator.class);
     CardValidator cardValidator = mock(CardValidator.class);
@@ -113,6 +119,9 @@ public class GeneratePaymentOrderServiceTest {
   }
    @Test
   void generate_cortaSiTarjetaInvalida_noValidaCuponesNiComisiona() {
+    //Verifica que, si la tarjeta elegida no corresponde, el sistema avisa y no 
+    //intenta aplicar beneficios ni costos; corta de forma segura.
+    
     ImageValidator image = mock(ImageValidator.class);
     AmountValidator amount = mock(AmountValidator.class);
     CardValidator card = mock(CardValidator.class);
@@ -138,6 +147,9 @@ public class GeneratePaymentOrderServiceTest {
   
   @Test
   void generate_pasaBaseCorrectaAComision() {
+    //confirma que el costo adicional se calcula solo sobre lo que realmente queda por pagar
+    // y que el total final refleja esa lógica con sentido común.
+    
     ImageValidator image = mock(ImageValidator.class);
     AmountValidator amount = mock(AmountValidator.class);
     CardValidator card = mock(CardValidator.class);
