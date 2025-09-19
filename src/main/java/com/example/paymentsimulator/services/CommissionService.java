@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 /**
  * Calcula la tasa de comisión por tramos.
  * Regla asumida: montos < 1000 => 8%, montos >= 1000 => 5%.
- * (Tu especificación tenía [min,1000] y [1000,max]; para no solapar,
- * tomamos 1000 como límite inferior del segundo tramo).
+ * [min,1000] y [1000,max] para no solapar
+ * tomamos 1000 como límite inferior del segundo tramo.
  */
 public class CommissionService {
 

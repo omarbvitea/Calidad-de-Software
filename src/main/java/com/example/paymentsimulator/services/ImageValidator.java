@@ -4,7 +4,6 @@ import com.example.paymentsimulator.exceptions.ValidationException;
 
 /**
  * Valida que el nombre de archivo termine en .jpg o .png (case-insensitive).
- * No hace inspección binaria del contenido.
  */
 public class ImageValidator {
 

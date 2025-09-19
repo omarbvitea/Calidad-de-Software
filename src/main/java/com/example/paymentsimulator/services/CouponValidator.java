@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Valida cupones contra una lista disponible (p.ej. cargada desde TXT).
+ * Valida cupones contra una lista disponible (por ejemplo: cargada desde TXT).
  * - Máximo 3 códigos simultáneos.
  * - Deben existir.
  * - Deben cumplir monto mínimo.

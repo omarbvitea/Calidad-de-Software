@@ -15,7 +15,6 @@ import com.example.paymentsimulator.services.CouponValidator;
 import com.example.paymentsimulator.services.ImageValidator;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.math.BigDecimal;
 import java.util.List;
