@@ -13,8 +13,9 @@ import com.example.paymentsimulator.services.ImageValidator;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
-
+import java.util.Optional;
 /**
  * Orquestador del caso de uso "Generar orden de pago".
  * - Valida imagen (.jpg/.jpeg/.png por nombre)
@@ -71,7 +72,7 @@ public class GeneratePaymentOrderService {
         amountValidator.validate(amount);
         Card card = cardValidator.validate(userCards, chosenMasked, bank);
         List<Coupon> coupons = couponValidator.validate(availableCoupons, couponCodes, amount);
-
+       
         // Cálculos 
         BigDecimal discount = couponValidator.totalDiscount(coupons);
         BigDecimal base = amount.subtract(discount);
