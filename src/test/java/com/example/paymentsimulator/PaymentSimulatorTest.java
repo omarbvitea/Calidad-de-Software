@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class PaymentSimulatorTest {
@@ -15,10 +16,10 @@ class PaymentSimulatorTest {
 
     @Test
     void testMockitoWorks() {
-        // Crear un mock de PaymentService
+        // Crea un mock de PaymentService
         PaymentService paymentService = Mockito.mock(PaymentService.class);
 
-        // Configurar comportamiento simulado
+        // Configura comportamiento simulado
         when(paymentService.process("123")).thenReturn("Pago exitoso");
 
         // Llamar al mock

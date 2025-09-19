@@ -49,11 +49,11 @@ public class GeneratePaymentOrderService {
      *
      * @param fileName        nombre del archivo de imagen (se valida extensión)
      * @param amount          monto de la orden (antes de descuentos)
-     * @param currency        moneda (p.ej. "PEN", "USD")
+     * @param currency        moneda (por ejemplo: "PEN", "USD")
      * @param userCards       tarjetas registradas del usuario
      * @param chosenMasked    tarjeta elegida (maskedNumber)
      * @param bank            banco seleccionado por el usuario
-     * @param availableCoupons lista de cupones disponibles (p.ej. cargados desde TXT)
+     * @param availableCoupons lista de cupones disponibles (por ejemplo: cargados desde TXT)
      * @param couponCodes     códigos de cupón ingresados por el usuario (máx 3)
      * @return PaymentOrder construida
      */
@@ -72,7 +72,7 @@ public class GeneratePaymentOrderService {
         Card card = cardValidator.validate(userCards, chosenMasked, bank);
         List<Coupon> coupons = couponValidator.validate(availableCoupons, couponCodes, amount);
 
-        // Cálculos económicos
+        // Cálculos 
         BigDecimal discount = couponValidator.totalDiscount(coupons);
         BigDecimal base = amount.subtract(discount);
         if (base.signum() < 0) base = BigDecimal.ZERO;
@@ -86,7 +86,7 @@ public class GeneratePaymentOrderService {
         Money commissionMoney = new Money(commission, currency);
         Money finalMoney = new Money(total, currency);
 
-        String orderCode = genOrderCode(); // puedes reemplazar por un generador real
+        String orderCode = genOrderCode(); 
 
         return new PaymentOrder(
                 orderCode,
@@ -100,7 +100,7 @@ public class GeneratePaymentOrderService {
         );
     }
 
-    /** Generador simple de códigos (ej: ORD-1712778890123). */
+    /** Generador simple de códigos (por ejemplo: ORD-1712778890123). */
     private String genOrderCode() {
         return "ORD-" + System.currentTimeMillis();
     }

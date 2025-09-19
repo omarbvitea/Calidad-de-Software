@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Representa un valor monetario con su moneda (p.ej. "PEN" o "USD").
+ * Representa un valor monetario con su moneda (por ejemplo: "PEN" o "USD").
  */
 public record Money(BigDecimal amount, String currency) {
 
