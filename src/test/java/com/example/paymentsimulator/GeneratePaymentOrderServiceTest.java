@@ -147,7 +147,7 @@ public class GeneratePaymentOrderServiceTest {
   
   @Test
   void generate_pasaBaseCorrectaAComision() {
-    //confirma que el costo adicional se calcula solo sobre lo que realmente queda por pagar
+    //Verifica que el costo adicional se calcula solo sobre lo que realmente queda por pagar
     // y que el total final refleja esa lógica con sentido común.
     
     ImageValidator image = mock(ImageValidator.class);
