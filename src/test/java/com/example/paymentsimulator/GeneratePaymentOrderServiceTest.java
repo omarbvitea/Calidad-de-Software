@@ -176,4 +176,67 @@ public class GeneratePaymentOrderServiceTest {
     assertEquals(new BigDecimal("78.75"), order.finalAmount().amount()); // 75 + 3.75
     verify(commission).commissionOf(argThat(bd -> bd.compareTo(new BigDecimal("75.00")) == 0));
   }
+
+  @Test
+    void generate_cortaSiMontoInvalido() {
+      ImageValidator image = mock(ImageValidator.class);
+      AmountValidator amount = mock(AmountValidator.class);
+      CardValidator card = mock(CardValidator.class);
+      CouponValidator coupon = mock(CouponValidator.class);
+      CommissionService commission = mock(CommissionService.class);
+
+      List<Card> cards = List.of(new Card("****-1234", Bank.BCP));
+
+      doNothing().when(image).validate("ok.png");
+      doThrow(new ValidationException("Monto inválido"))
+              .when(amount).validate(new BigDecimal("-5.00"));
+
+      GeneratePaymentOrderService sut = newSut(image, amount, card, coupon, commission);
+      assertThrows(ValidationException.class, () ->
+              sut.generate("ok.png", new BigDecimal("-5.00"), "PEN", cards, "****-1234", Bank.BCP, List.of(), List.of())
+      );
+
+      verifyNoInteractions(card, coupon, commission);
+  }
+
+  @Test
+  void generate_cortaSiCuponInvalido() {
+    ImageValidator image = mock(ImageValidator.class);
+    AmountValidator amount = mock(AmountValidator.class);
+    CardValidator  card = mock(CardValidator.class);
+    CouponValidator coupon = mock(CouponValidator.class);
+    CommissionService commission = mock(CommissionService.class);
+
+    List<Card> cards =  List.of(new Card("****-1234", Bank.BCP));
+
+    //stubs
+    doNothing().when(image).validate("ok.png");
+    doNothing().when(amount).validate(new BigDecimal("30.00"));
+    when(card.validate(cards, "****-1234", Bank.BCP)).thenReturn(cards.get(0));
+
+    // validador de cupones falla por monto mínimo
+    when(coupon.validate(anyList(), anyList(), eq(new BigDecimal("30.00"))))
+            .thenThrow(new ValidationException("Cupón inválido."));
+
+    GeneratePaymentOrderService sut = newSut(image, amount, card, coupon, commission);
+
+    // Act + Assert: esperar validation exception
+    assertThrows(ValidationException.class, () ->
+            sut.generate("ok.png",
+                    new BigDecimal("30.00"),
+                    "PEN",
+                    cards,
+                    "****-1234",
+                    Bank.BCP,
+                    List.of(new Coupon("CUPON50", new BigDecimal("50.00"), new BigDecimal("10.00"), 5, 0)),
+                    List.of("CUPON50")));
+
+    //verify
+    verify(image).validate("ok.png");
+    verify(amount).validate(new BigDecimal("30.00"));
+    verify(card).validate(cards, "****-1234", Bank.BCP);
+    verify(coupon).validate(anyList(), anyList(), eq(new BigDecimal("30.00")));
+    verifyNoInteractions(commission);
+
+  }
 }
