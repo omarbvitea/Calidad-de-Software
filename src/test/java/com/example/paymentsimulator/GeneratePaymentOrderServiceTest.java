@@ -5,6 +5,7 @@
 package com.example.paymentsimulator;
 import com.example.paymentsimulator.domain.Bank;
 import com.example.paymentsimulator.domain.Card;
+import com.example.paymentsimulator.domain.Coupon;
 import com.example.paymentsimulator.domain.PaymentOrder;
 import com.example.paymentsimulator.exceptions.ValidationException;
 import com.example.paymentsimulator.services.AmountValidator;
@@ -109,5 +110,59 @@ public class GeneratePaymentOrderServiceTest {
 
     // no toca nada más si falla la imagen
     verifyNoInteractions(amountValidator, cardValidator, couponValidator, commissionService);
-  }  
+  }
+   @Test
+  void generate_cortaSiTarjetaInvalida_noValidaCuponesNiComisiona() {
+    ImageValidator image = mock(ImageValidator.class);
+    AmountValidator amount = mock(AmountValidator.class);
+    CardValidator card = mock(CardValidator.class);
+    CouponValidator coupon = mock(CouponValidator.class);
+    CommissionService commission = mock(CommissionService.class);
+
+    List<Card> cards = List.of(new Card("****-9999", Bank.BCP));
+
+    doNothing().when(image).validate("ok.png");
+    doNothing().when(amount).validate(new BigDecimal("50.00"));
+    doThrow(new ValidationException("tarjeta no válida"))
+        .when(card).validate(cards, "****-9999", Bank.BCP);
+
+    GeneratePaymentOrderService sut = newSut(image, amount, card, coupon, commission);
+
+    assertThrows(ValidationException.class, () ->
+        sut.generate("ok.png", new BigDecimal("50.00"), "PEN",
+            cards, "****-9999", Bank.BCP, List.of(), List.of())
+    );
+
+    verifyNoInteractions(coupon, commission);
+  }
+  
+  @Test
+  void generate_pasaBaseCorrectaAComision() {
+    ImageValidator image = mock(ImageValidator.class);
+    AmountValidator amount = mock(AmountValidator.class);
+    CardValidator card = mock(CardValidator.class);
+    CouponValidator coupon = mock(CouponValidator.class);
+    CommissionService commission = mock(CommissionService.class);
+
+    List<Card> cards = List.of(new Card("****-1234", Bank.BCP));
+    when(card.validate(cards, "****-1234", Bank.BCP)).thenReturn(cards.get(0));
+
+    when(coupon.validate(anyList(), anyList(), eq(new BigDecimal("100.00"))))
+        .thenReturn(List.of(new Coupon("D25", new BigDecimal("0.00"),
+            new BigDecimal("25.00"), 10, 0)));
+    when(coupon.totalDiscount(any())).thenReturn(new BigDecimal("25.00"));
+
+    // Verifica con compareTo (evita problemas de escala 0 vs 0.00)
+    when(commission.commissionOf(argThat(bd -> bd.compareTo(new BigDecimal("75.00")) == 0)))
+        .thenReturn(new BigDecimal("3.75"));
+
+    GeneratePaymentOrderService sut = newSut(image, amount, card, coupon, commission);
+
+    PaymentOrder order = sut.generate(
+        "ok.png", new BigDecimal("100.00"), "PEN",
+        cards, "****-1234", Bank.BCP, List.of(), List.of("D25"));
+
+    assertEquals(new BigDecimal("78.75"), order.finalAmount().amount()); // 75 + 3.75
+    verify(commission).commissionOf(argThat(bd -> bd.compareTo(new BigDecimal("75.00")) == 0));
+  }
 }

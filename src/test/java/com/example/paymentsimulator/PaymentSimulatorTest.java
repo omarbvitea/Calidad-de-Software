@@ -1,5 +1,16 @@
 package com.example.paymentsimulator;
 
+import com.example.paymentsimulator.domain.Bank;
+import com.example.paymentsimulator.domain.Card;
+import com.example.paymentsimulator.domain.Coupon;
+import com.example.paymentsimulator.domain.PaymentOrder;
+import com.example.paymentsimulator.services.AmountValidator;
+import com.example.paymentsimulator.services.CardValidator;
+import com.example.paymentsimulator.services.CommissionService;
+import com.example.paymentsimulator.services.CouponValidator;
+import com.example.paymentsimulator.services.ImageValidator;
+import java.math.BigDecimal;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
