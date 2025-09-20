@@ -46,7 +46,8 @@ public class PaymentSimulator {
             AmountValidator amountValidator = new AmountValidator(new BigDecimal("1.00"), new BigDecimal("1000000"));
             CardValidator cardValidator = new CardValidator();
             CouponValidator couponValidator = new CouponValidator();
-            CommissionService commissionService = new CommissionService();
+            CommissionRuleProvider ruleProvider = new DefaultCommissionRuleProvider();
+            CommissionService commissionService = new CommissionService(ruleProvider);
 
             GeneratePaymentOrderService service = new GeneratePaymentOrderService(
                     imageValidator, amountValidator, cardValidator, couponValidator, commissionService

@@ -1,4 +1,4 @@
-package com.example.paymentsimulator.validators;
+package com.example.paymentsimulator.services;
 
 import com.example.paymentsimulator.domain.Coupon;
 import com.example.paymentsimulator.exceptions.BusinessException;
